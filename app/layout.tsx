@@ -21,7 +21,7 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 export const metadata: Metadata = {
-  title: "SoftVibe Services - Modern Software Development & Technology Consulting",
+  title: "Custom Software Development for Startups | SoftVibe Services",
   description:
     "Building scalable, production-ready digital solutions for startups and growing enterprises. Full-stack development, UI/UX design, cloud architecture, and MVP development.",
   icons: {
