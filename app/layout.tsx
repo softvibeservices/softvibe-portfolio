@@ -29,6 +29,11 @@ export const metadata: Metadata = {
     apple: [{ url: "/softvibe-favicon.png" }],
   },
   generator: "v0.app",
+
+  // ✅ Google Search Console verification
+  verification: {
+    google: "6jIVwB2wOh5ovkyo79uFlwPsup0LY1r7rRSidc1sREw",
+  },
 }
 
 export default function RootLayout({
@@ -40,7 +45,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans`}>
         <Suspense fallback={null}>
-          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
             {children}
           </ThemeProvider>
           <Analytics />
