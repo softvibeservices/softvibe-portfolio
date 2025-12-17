@@ -27,7 +27,7 @@ export default function Hero() {
           style={{ animationDelay: "0.1s" }}
         >
           Modern software development and technology consulting for startups and enterprises. We transform ideas into
-          reliable, high-performance digital products—from MVP to scale.
+          reliable, high-performance digital products—from MVP to scale. As we say - "Transforming Ideas Into Reality."
         </p>
 
         <div
