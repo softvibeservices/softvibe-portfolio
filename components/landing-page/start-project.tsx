@@ -3,6 +3,9 @@
 import ProjectForm from "./project-form"
 import { useEffect } from "react"
 import { useTheme } from "next-themes"
+import { FloatingOrbs } from "@/components/ui/floating-orbs"
+import { ScrollReveal } from "@/components/ui/scroll-reveal"
+import { motion } from "framer-motion"
 
 export default function StartProject() {
   const { resolvedTheme } = useTheme()
@@ -29,9 +32,11 @@ export default function StartProject() {
 
             // Try to access the iframe content if possible
             try {
-              const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
-              if (iframeDoc && iframeDoc.documentElement) {
-                iframeDoc.documentElement.setAttribute("data-theme", resolvedTheme || "light")
+              if (iframe instanceof HTMLIFrameElement) {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
+                if (iframeDoc && iframeDoc.documentElement) {
+                  iframeDoc.documentElement.setAttribute("data-theme", resolvedTheme || "light")
+                }
               }
             } catch (e) {
               console.log("Cannot access iframe content due to same-origin policy")
@@ -49,13 +54,23 @@ export default function StartProject() {
   }, [resolvedTheme])
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#111111]">
-      <div className="mb-8 text-center pt-8">
-        <h2 className="text-black dark:text-white text-3xl md:text-5xl font-medium">
-          Ready to Start <br />
-          Your Next <span className="text-[#7A7FEE]">Project</span>?
-        </h2>
-      </div>
+    <div className="min-h-screen bg-white dark:bg-[#111111] relative overflow-hidden">
+      <FloatingOrbs />
+
+      <ScrollReveal>
+        <div className="mb-8 text-center pt-8 relative z-10">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <h2 className="text-black dark:text-white text-3xl md:text-5xl font-bold mb-4">
+              Ready to Start Your Next{" "}
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Project</span>?
+            </h2>
+            <p className="text-gray-700 dark:text-gray-300 text-lg max-w-2xl mx-auto leading-relaxed">
+              Let's discuss your vision and bring it to life with cutting-edge technology and expert craftsmanship.
+            </p>
+          </motion.div>
+        </div>
+      </ScrollReveal>
+
       <ProjectForm />
     </div>
   )

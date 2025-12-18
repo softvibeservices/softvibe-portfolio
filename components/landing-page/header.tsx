@@ -10,6 +10,7 @@ import ThemeToggle from "./theme-toggle"
 import { useTheme } from "next-themes"
 import MobileMenu from "./mobile-menu"
 import { Button } from "@/components/ui/button"
+import { motion, useScroll, useTransform } from "framer-motion"
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -18,6 +19,8 @@ export default function Header() {
   const { resolvedTheme } = useTheme()
   const pathname = usePathname()
   const router = useRouter()
+  const { scrollY } = useScroll()
+  const headerOpacity = useTransform(scrollY, [0, 50], [0.8, 1])
 
   useEffect(() => {
     setMounted(true)
@@ -47,25 +50,33 @@ export default function Header() {
 
   return (
     <>
-      <header
+      <motion.header
         className={`sticky top-0 z-40 w-full transition-all duration-200 ${
           isScrolled ? "bg-background/80 backdrop-blur-lg shadow-sm border-b border-border/50" : "bg-transparent"
         }`}
+        style={{ opacity: headerOpacity }}
       >
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3 group" onClick={handleLogoClick}>
               {mounted ? (
                 <>
-                  <Image
-                    src="/softvibe-logo.png"
-                    alt="SoftVibe Services Logo"
-                    width={56}
-                    height={56}
-                    className="w-14 h-14 rounded-xl group-hover:scale-105 transition-transform shadow-md"
-                  />
+                  <motion.div whileHover={{ rotate: 360, scale: 1.1 }} transition={{ duration: 0.6 }}>
+                    <Image
+                      src="/softvibe-logo.png"
+                      alt="SoftVibe Services Logo"
+                      width={56}
+                      height={56}
+                      className="w-14 h-14 rounded-xl shadow-md"
+                    />
+                  </motion.div>
                   <div className="flex flex-col">
-                    <span className="text-xl font-bold leading-tight">SOFTVIBE SERVICES</span>
+                    <motion.span
+                      className="text-xl font-bold leading-tight"
+                      whileHover={{ color: "hsl(var(--primary))" }}
+                    >
+                      SOFTVIBE SERVICES
+                    </motion.span>
                     <span className="text-xs text-muted-foreground italic">Transforming Ideas into Reality</span>
                   </div>
                 </>
@@ -77,48 +88,46 @@ export default function Header() {
             <div className="flex items-center gap-6">
               <nav className="hidden md:block">
                 <ul className="flex items-center gap-6">
-                  <li>
-                    <Link
-                      href="/#services"
-                      className={`transition-colors font-medium ${
-                        pathname === "/#services" ? "text-primary" : "hover:text-primary"
-                      }`}
-                    >
-                      Services
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/portfolio"
-                      className={`transition-colors font-medium ${
-                        pathname === "/portfolio" ? "text-primary" : "hover:text-primary"
-                      }`}
-                    >
-                      Portfolio
-                    </Link>
-                  </li>
-                  <li>
-                    <Button asChild size="sm" className="ml-2">
+                  {[
+                    { href: "/#services", label: "Services" },
+                    { href: "/portfolio", label: "Portfolio" },
+                  ].map((link) => (
+                    <motion.li key={link.href} whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }}>
+                      <Link
+                        href={link.href}
+                        className={`transition-colors font-medium ${
+                          pathname === link.href ? "text-primary" : "hover:text-primary"
+                        }`}
+                      >
+                        {link.label}
+                      </Link>
+                    </motion.li>
+                  ))}
+                  <motion.li whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button asChild size="sm" className="ml-2 shadow-md">
                       <Link href="/start">Start a Project</Link>
                     </Button>
-                  </li>
+                  </motion.li>
                 </ul>
               </nav>
 
               <ThemeToggle />
 
               {/* Mobile Menu Button */}
-              <button
+              <motion.button
                 onClick={() => setMobileMenuOpen(true)}
                 className="p-2 rounded-md hover:bg-accent/10 md:hidden"
                 aria-label="Toggle menu"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
               >
                 <Menu className="h-6 w-6" />
-              </button>
+              </motion.button>
             </div>
           </div>
         </div>
-      </header>
+      </motion.header>
+      {/* </CHANGE> */}
 
       <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
     </>

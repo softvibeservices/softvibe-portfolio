@@ -1,8 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, HelpCircle } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
+import { ScrollReveal } from "../ui/scroll-reveal"
+import { motion, AnimatePresence } from "framer-motion"
 
 const faqs = [
   {
@@ -51,53 +53,88 @@ export default function Faq() {
   }
 
   return (
-    <section id="faq" className="py-20 md:py-32">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-balance">
-            Questions?
-            <span className="block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              We've Got Answers
-            </span>
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Learn more about our process, pricing, and how we can help transform your ideas into reliable software.
-          </p>
-        </div>
+    <section id="faq" className="py-20 md:py-32 relative overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/30 rounded-full blur-3xl" />
+      </div>
+      {/* </CHANGE> */}
 
-        <Card className="border-border/50 bg-card/50 backdrop-blur">
-          <CardContent className="p-6 md:p-8">
-            <div className="space-y-4">
-              {faqs.map((faq) => (
-                <div key={faq.id} className="border-b border-border last:border-0 pb-4 last:pb-0">
-                  <button
-                    onClick={() => toggleItem(faq.id)}
-                    className="flex justify-between items-start w-full text-left py-2 group"
-                    aria-expanded={openItem === faq.id}
-                    aria-controls={`faq-answer-${faq.id}`}
+      <div className="max-w-4xl mx-auto px-4 relative">
+        <ScrollReveal>
+          <div className="text-center mb-16">
+            <motion.div
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-4"
+              animate={{ y: [0, -5, 0] }}
+              transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+            >
+              <HelpCircle className="w-4 h-4" />
+              <span>FAQ</span>
+            </motion.div>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-balance">
+              Questions?
+              <span className="block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                We've Got Answers
+              </span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Learn more about our process, pricing, and how we can help transform your ideas into reliable software.
+            </p>
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.2}>
+          <Card className="border-border/50 bg-card/80 backdrop-blur-sm shadow-xl">
+            <CardContent className="p-6 md:p-8">
+              <div className="space-y-4">
+                {faqs.map((faq, index) => (
+                  <motion.div
+                    key={faq.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="border-b border-border last:border-0 pb-4 last:pb-0"
                   >
-                    <span className="font-semibold text-lg group-hover:text-primary transition-colors pr-4">
-                      {faq.question}
-                    </span>
-                    <ChevronDown
-                      className={`w-5 h-5 flex-shrink-0 transition-all mt-1 ${
-                        openItem === faq.id ? "rotate-180 text-primary" : "text-muted-foreground"
-                      }`}
-                    />
-                  </button>
-                  {openItem === faq.id && (
-                    <div
-                      id={`faq-answer-${faq.id}`}
-                      className="mt-3 text-muted-foreground leading-relaxed animate-fade-in"
+                    <motion.button
+                      onClick={() => toggleItem(faq.id)}
+                      className="flex justify-between items-start w-full text-left py-2 group"
+                      aria-expanded={openItem === faq.id}
+                      aria-controls={`faq-answer-${faq.id}`}
+                      whileHover={{ x: 5 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
                     >
-                      {faq.answer}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                      <span className="font-semibold text-lg group-hover:text-primary transition-colors pr-4">
+                        {faq.question}
+                      </span>
+                      <motion.div animate={{ rotate: openItem === faq.id ? 180 : 0 }} transition={{ duration: 0.3 }}>
+                        <ChevronDown
+                          className={`w-5 h-5 flex-shrink-0 mt-1 ${
+                            openItem === faq.id ? "text-primary" : "text-muted-foreground"
+                          }`}
+                        />
+                      </motion.div>
+                    </motion.button>
+                    <AnimatePresence>
+                      {openItem === faq.id && (
+                        <motion.div
+                          id={`faq-answer-${faq.id}`}
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="mt-3 text-muted-foreground leading-relaxed">{faq.answer}</div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </ScrollReveal>
       </div>
     </section>
   )

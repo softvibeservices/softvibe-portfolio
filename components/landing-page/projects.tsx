@@ -7,6 +7,8 @@ import { ArrowUpRight, ExternalLink } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { ScrollReveal } from "../ui/scroll-reveal"
+import { motion } from "framer-motion"
 
 const projects = [
   {
@@ -111,62 +113,93 @@ export default function Projects() {
   const [selectedProject, setSelectedProject] = useState<(typeof projects)[0] | null>(null)
 
   return (
-    <section id="projects" className="py-20 md:py-32">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-balance">
-            Featured Work &
-            <span className="block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Client Success Stories
-            </span>
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            From hospitality platforms to retail solutions, our work helps businesses scale smarter. Explore real-world
-            projects we've built for startups and growing enterprises.
-          </p>
-        </div>
+    <section id="projects" className="py-20 md:py-32 relative">
+      <motion.div
+        className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage:
+            "linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)",
+          backgroundSize: "50px 50px",
+        }}
+        animate={{ backgroundPosition: ["0px 0px", "50px 50px"] }}
+        transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+      />
+      {/* </CHANGE> */}
+
+      <div className="max-w-7xl mx-auto px-4 relative">
+        <ScrollReveal>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-balance">
+              Featured Work &
+              <span className="block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                Client Success Stories
+              </span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              From hospitality platforms to retail solutions, our work helps businesses scale smarter. Explore
+              real-world projects we've built for startups and growing enterprises.
+            </p>
+          </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {projects.map((project, index) => (
-            <Card
-              key={project.title}
-              className="group overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-border/50 bg-card/50 backdrop-blur"
-              onClick={() => setSelectedProject(project)}
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className="relative overflow-hidden h-48">
-                <Image
-                  src={project.image || "/placeholder.svg"}
-                  alt={project.title}
-                  width={600}
-                  height={400}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              </div>
-              <CardContent className="p-6">
-                <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
-                  {project.title}
-                </h3>
-                <p className="text-muted-foreground text-sm mb-4 line-clamp-2">{project.description}</p>
-                <div className="inline-flex items-center text-primary text-sm font-medium group">
-                  View Details
-                  <ArrowUpRight className="w-4 h-4 ml-1 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                </div>
-              </CardContent>
-            </Card>
+            <ScrollReveal key={project.title} delay={index * 0.15}>
+              <motion.div whileHover={{ y: -10 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
+                <Card
+                  className="group overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer border-border/50 bg-card/50 backdrop-blur-sm"
+                  onClick={() => setSelectedProject(project)}
+                >
+                  <div className="relative overflow-hidden h-48">
+                    <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.4 }}>
+                      <Image
+                        src={project.image || "/placeholder.svg"}
+                        alt={project.title}
+                        width={600}
+                        height={400}
+                        className="w-full h-full object-cover"
+                      />
+                    </motion.div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                      <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        whileHover={{ y: 0, opacity: 1 }}
+                        className="text-sm font-medium text-white"
+                      >
+                        Click to view details
+                      </motion.div>
+                    </div>
+                  </div>
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
+                      {project.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm mb-4 line-clamp-2">{project.description}</p>
+                    <div className="inline-flex items-center text-primary text-sm font-medium group">
+                      View Details
+                      <ArrowUpRight className="w-4 h-4 ml-1 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+              {/* </CHANGE> */}
+            </ScrollReveal>
           ))}
         </div>
 
-        <div className="flex justify-center mt-12">
-          <Link
-            href="/portfolio"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
-          >
-            View Full Portfolio
-            <ExternalLink className="w-4 h-4" />
-          </Link>
-        </div>
+        <ScrollReveal delay={0.5}>
+          <div className="flex justify-center mt-12">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link
+                href="/portfolio"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium shadow-lg shadow-primary/25"
+              >
+                View Full Portfolio
+                <ExternalLink className="w-4 h-4" />
+              </Link>
+            </motion.div>
+          </div>
+        </ScrollReveal>
       </div>
 
       <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
