@@ -14,7 +14,7 @@ export default function PortfolioDetailPage({ project }: PortfolioDetailPageProp
   return (
     <main className="min-h-screen bg-white dark:bg-[#111111]">
       <Header />
-      <div className="container py-12">
+      <div className="container py-12 pb-32 md:pb-12">
         <Link href="/portfolio" className="inline-flex items-center text-gray-400 hover:text-[#7A7FEE] mb-8">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Portfolio
@@ -39,7 +39,7 @@ export default function PortfolioDetailPage({ project }: PortfolioDetailPageProp
           </div>
 
           <div className="lg:col-span-1">
-            <div className="sticky top-24 bg-white dark:bg-[#272829] p-6 rounded-3xl card">
+            <div className="lg:sticky lg:top-24 bg-white dark:bg-[#272829] p-6 rounded-3xl card relative z-10">
               <div className="flex items-center gap-4 mb-6">
                 {project.logo && (
                   <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-800 flex items-center justify-center p-2">

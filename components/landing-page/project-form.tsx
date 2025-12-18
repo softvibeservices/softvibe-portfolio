@@ -24,10 +24,15 @@ export default function ProjectForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const emailBody = `Name: ${formData.name}%0A%0AEmail: ${formData.email}%0A%0APhone: ${formData.phone}%0A%0AMessage:%0A${encodeURIComponent(formData.message)}`
-    const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=softvibeservices@gmail.com&su=Project Inquiry from ${encodeURIComponent(formData.name)}&body=${emailBody}`
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 
-    window.open(gmailLink, "_blank")
+    const emailBody = `Name: ${formData.name}%0D%0A%0D%0AEmail: ${formData.email}%0D%0A%0D%0APhone: ${formData.phone}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(formData.message)}`
+
+    const emailLink = isMobile
+      ? `mailto:softvibeservices@gmail.com?subject=Project Inquiry from ${encodeURIComponent(formData.name)}&body=${emailBody}`
+      : `https://mail.google.com/mail/?view=cm&fs=1&to=softvibeservices@gmail.com&su=Project Inquiry from ${encodeURIComponent(formData.name)}&body=${emailBody}`
+
+    window.open(emailLink, "_blank")
   }
 
   return (

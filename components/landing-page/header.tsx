@@ -7,6 +7,7 @@ import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { Menu } from "lucide-react"
 import ThemeToggle from "./theme-toggle"
+import { useTheme } from "next-themes"
 import MobileMenu from "./mobile-menu"
 import { Button } from "@/components/ui/button"
 
@@ -14,6 +15,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const { resolvedTheme } = useTheme()
   const pathname = usePathname()
   const router = useRouter()
 
@@ -23,13 +25,19 @@ export default function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
+      if (window.scrollY > 10) {
+        setIsScrolled(true)
+      } else {
+        setIsScrolled(false)
+      }
     }
 
     window.addEventListener("scroll", handleScroll)
     handleScroll()
 
-    return () => window.removeEventListener("scroll", handleScroll)
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
   }, [])
 
   const handleLogoClick = (e: React.MouseEvent) => {
@@ -40,61 +48,40 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 z-40 w-full transition-colors duration-200 ${
-          isScrolled
-            ? "bg-background/80 backdrop-blur-lg border-b border-border/50"
-            : "bg-transparent"
+        className={`sticky top-0 z-40 w-full transition-all duration-200 ${
+          isScrolled ? "bg-background/80 backdrop-blur-lg shadow-sm border-b border-border/50" : "bg-transparent"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 py-3">
+        <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            {/* LOGO – always sharp */}
-            <Link
-              href="/"
-              onClick={handleLogoClick}
-              className="flex items-center gap-3"
-            >
+            <Link href="/" className="flex items-center gap-3 group" onClick={handleLogoClick}>
               {mounted ? (
                 <>
-                  <div className="relative w-[44px] h-[44px] flex-shrink-0">
-                    <Image
-                      src="/softvibe-logo.png"
-                      alt="SoftVibe Services Logo"
-                      width={44}
-                      height={44}
-                      priority
-                      quality={100}
-                      sizes="44px"
-                      className="object-contain select-none"
-                      draggable={false}
-                    />
-                  </div>
-
-                  <div className="flex flex-col leading-tight">
-                    <span className="text-lg font-extrabold tracking-tight">
-                      SoftVibe Services
-                    </span>
-                    <span className="text-xs text-muted-foreground italic">
-                      Transforming Ideas into Reality
-                    </span>
+                  <Image
+                    src="/softvibe-logo.png"
+                    alt="SoftVibe Services Logo"
+                    width={56}
+                    height={56}
+                    className="w-14 h-14 rounded-xl group-hover:scale-105 transition-transform shadow-md"
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-xl font-bold leading-tight">SOFTVIBE SERVICES</span>
+                    <span className="text-xs text-muted-foreground italic">Transforming Ideas into Reality</span>
                   </div>
                 </>
               ) : (
-                <div className="h-[44px] w-[220px]" />
+                <div className="h-14 w-[280px]" />
               )}
             </Link>
 
-            {/* Right Section */}
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-6">
               <nav className="hidden md:block">
                 <ul className="flex items-center gap-6">
                   <li>
                     <Link
                       href="/#services"
-                      className={`font-medium transition-colors ${
-                        pathname === "/#services"
-                          ? "text-primary"
-                          : "hover:text-primary"
+                      className={`transition-colors font-medium ${
+                        pathname === "/#services" ? "text-primary" : "hover:text-primary"
                       }`}
                     >
                       Services
@@ -103,10 +90,8 @@ export default function Header() {
                   <li>
                     <Link
                       href="/portfolio"
-                      className={`font-medium transition-colors ${
-                        pathname === "/portfolio"
-                          ? "text-primary"
-                          : "hover:text-primary"
+                      className={`transition-colors font-medium ${
+                        pathname === "/portfolio" ? "text-primary" : "hover:text-primary"
                       }`}
                     >
                       Portfolio
@@ -135,10 +120,7 @@ export default function Header() {
         </div>
       </header>
 
-      <MobileMenu
-        isOpen={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
-      />
+      <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
     </>
   )
 }
